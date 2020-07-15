@@ -1,0 +1,19 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  DOCKER_API_VERSION: "1.39"
+  DATABRICKS_HOST: https://corning.cloud.databricks.com
+
+services:
+  - docker:dind
+
+stages:
+  - action
+
+GitHub Actions:
+  image: dkamotsky/gitlab-actions:latest
+  stage: action
+  script:
+    - git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
+    - act --list -P ubuntu-latest=dkamotsky/action:latest
+    - act -P ubuntu-latest=dkamotsky/action:latest -s DATABRICKS_HOST=$DATABRICKS_HOST -s DATABRICKS_TOKEN=$DATABRICKS_TOKEN
