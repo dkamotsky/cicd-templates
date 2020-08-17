@@ -13,11 +13,11 @@ RUN apt-get install -y vim less
 
 RUN pip install --upgrade pip
 
-# /cet_debris_detection is not mounted yet!
+# /{{cookiecutter.project_slug}} is not mounted yet!
 COPY ./deployment /deployment
 RUN pip install --no-deps --no-cache-dir /deployment/databrickslabs_cicdtemplates-0.2.3-py3-none-any.whl
 
-# /cet_debris_detection is not mounted yet!
+# /{{cookiecutter.project_slug}} is not mounted yet!
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
 RUN pip uninstall -y pyspark
