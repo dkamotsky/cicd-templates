@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  job:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: base
+    entrypoint:
+      - /{{cookiecutter.project_slug}}/docker/scripts/run_pipeline.sh
+    command:
+      - $NAME
+    volumes:
+     - ..:/{{cookiecutter.project_slug}}
+
+

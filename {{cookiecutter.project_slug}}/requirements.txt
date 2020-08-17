@@ -1,11 +1,22 @@
+#These dependencies MUST MATCH the Databricks Runtime selected in the AWS Job Spec JSONs
+pyarrow==0.15.1
+mlflow==1.9.1
+python-dotenv==0.10.3
+databricks-cli==0.11.0
+pyyaml==5.3.1
+tensorflow==2.2.0
+petastorm==0.9.2
+#Needed by hacky code in the API jar for model deployment
+scikit-learn==0.22.1
+
+#CI/CD
 setuptools
 wheel
-databricks-connect==6.6.0
-pyarrow==0.17.1
-mlflow==1.8.0
-pytest==5.3.1
-python-dotenv==0.10.3
-databricks-cli==0.10.0
-pyyaml>=5.1
-sklearn
+oktest
+mypy
+pylint
+pytest
 
+#Local Ops
+jupyter
+shyaml

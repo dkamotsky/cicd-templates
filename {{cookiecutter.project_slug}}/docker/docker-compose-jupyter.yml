@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  base:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: jupyter
+    ports:
+     - "8888:8888" #default Jupyter port
+     - "6006:6006" #tensorboard
+    entrypoint:
+      - /bin/bash
+    command:
+      - -c
+      - echo 'Starting Jupyter with locally mounted filesystem...' && /{{cookiecutter.project_slug}}/docker/scripts/launch.sh
+    volumes:
+     - ..:/{{cookiecutter.project_slug}}
+
