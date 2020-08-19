@@ -1,0 +1,2 @@
+app_name: 'End-to-end functional test'
+model_name: {{cookiecutter.project_slug}}-dev-test

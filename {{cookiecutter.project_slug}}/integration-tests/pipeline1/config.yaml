@@ -1,0 +1,2 @@
+app_name: 'End-to-end acceptance test'
+model_name: {{cookiecutter.project_slug}}-int-test

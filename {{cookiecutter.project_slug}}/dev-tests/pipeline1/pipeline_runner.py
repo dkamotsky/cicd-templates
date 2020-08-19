@@ -1,11 +1,16 @@
-import pandas as pd
-import numpy as np
+from overrides import overrides
+from typing import Any, Mapping
+from pyspark.sql import SparkSession, DataFrame
+from {{cookiecutter.project_slug}}.test_shared import Harness
 
-from pyspark.sql import SparkSession
-if 'spark' not in locals():
-    spark = SparkSession.builder.appName('Test').getOrCreate()
+class MyHarness(Harness):
 
-df = pd.DataFrame(np.random.randint(0, 1000, size=(5000, 1)), columns=['y'])
-df['AccountId'] = np.random.randint(0, 3, size=(5000, 1)).astype(dtype='object')
-sparkDf = spark.createDataFrame(df)
-print(sparkDf.count())
+    @overrides
+    def _train(self, spark: SparkSession, conf: Mapping[str, Any]) -> str:
+        raise NotImplementedError
+
+    @overrides
+    def _eval(self, spark: SparkSession, experiment_data: DataFrame, conf: Mapping[str, Any]) -> str:
+        raise NotImplementedError
+
+MyHarness()()
