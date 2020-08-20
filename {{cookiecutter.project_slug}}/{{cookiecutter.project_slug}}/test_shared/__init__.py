@@ -9,88 +9,100 @@ from typing import MutableMapping, Any, Optional, Mapping
 from pyspark.sql import SparkSession, DataFrame
 from mlflow.tracking import MlflowClient
 from ..config import read_config, setup_mlflow
-from glob import glob
-from pathlib import Path
-from urllib.parse import urlparse
-from petastorm.spark import SparkDatasetConverter
-import petastorm.spark.spark_dataset_converter as petastorm_internal
 
-# The following import resolves only with databricks-connect
-# pylint: disable=no-name-in-module, import-error
-from pyspark.dbutils import DBUtils
+try:
 
+    import tensorflow as tf
+    assert tf.__version__ == '2.2.0', "Tensorflow 2.2.0 is required!"
+    from glob import glob
+    from pathlib import Path
+    from urllib.parse import urlparse
+    from petastorm.spark import SparkDatasetConverter
+    import petastorm.spark.spark_dataset_converter as petastorm_internal
 
-def make_spark_converter(df,
-                         parquet_row_group_size_bytes=petastorm_internal.DEFAULT_ROW_GROUP_SIZE_BYTES,
-                         compression_codec=None,
-                         dtype='float32'):
-    """
-       Copy-paste of the Petastorm source code, with modification as shown in the comment below.
-    """
-    parent_cache_dir_url = petastorm_internal._get_parent_cache_dir_url()
-
-    # TODO: Improve default behavior to be automatically choosing the best way.
-    compression_codec = compression_codec or "uncompressed"
-
-    if compression_codec.lower() not in \
-            ['uncompressed', 'bzip2', 'gzip', 'lz4', 'snappy', 'deflate']:
-        raise RuntimeError(
-            "compression_codec should be None or one of the following values: "
-            "'uncompressed', 'bzip2', 'gzip', 'lz4', 'snappy', 'deflate'")
-
-    dataset_cache_dir_url = petastorm_internal._cache_df_or_retrieve_cache_data_url(
-        df, parent_cache_dir_url, parquet_row_group_size_bytes, compression_codec, dtype)
-
-    spark = petastorm_internal._get_spark_session()
-
-    dbutils = DBUtils(spark.sparkContext)
-    dbutils.fs.cp(dataset_cache_dir_url.replace("file:///dbfs/", "dbfs:/"), dataset_cache_dir_url, True)
-
-    spark_df = spark.read.parquet(dataset_cache_dir_url)
-    dataset_size = spark_df.count()
-
-    #parquet_file_url_list = list(spark_df._jdf.inputFiles())
-    parquet_file_url_list = [Path(f).as_uri() for f in glob(urlparse(dataset_cache_dir_url).path+"/*.parquet")]
-
-    petastorm_internal._check_dataset_file_median_size(parquet_file_url_list)
-
-    return SparkDatasetConverter(dataset_cache_dir_url, parquet_file_url_list, dataset_size)
+    # The following import resolves only with databricks-connect
+    # pylint: disable=no-name-in-module, import-error
+    from pyspark.dbutils import DBUtils
 
 
-def adapt_petastorm_to_databricks_connect() -> None:
-    """
-        Makes Petastorm work over Databricks Connect by pulling Petastorm-materialized dataset to the
-        local volume using dbutils.
+    def make_spark_converter(df,
+                             parquet_row_group_size_bytes=petastorm_internal.DEFAULT_ROW_GROUP_SIZE_BYTES,
+                             compression_codec=None,
+                             dtype='float32'):
+        """
+           Copy-paste of the Petastorm source code, with modification as shown in the comment below.
+        """
+        parent_cache_dir_url = petastorm_internal._get_parent_cache_dir_url()
 
-        :return: returns nothing
-    """
-    import petastorm
-    assert petastorm.__version__ == '0.9.2', "Supports only petastorm==0.9.2"
-    petastorm.spark.spark_dataset_converter.make_spark_converter = make_spark_converter
+        # TODO: Improve default behavior to be automatically choosing the best way.
+        compression_codec = compression_codec or "uncompressed"
+
+        if compression_codec.lower() not in \
+                ['uncompressed', 'bzip2', 'gzip', 'lz4', 'snappy', 'deflate']:
+            raise RuntimeError(
+                "compression_codec should be None or one of the following values: "
+                "'uncompressed', 'bzip2', 'gzip', 'lz4', 'snappy', 'deflate'")
+
+        dataset_cache_dir_url = petastorm_internal._cache_df_or_retrieve_cache_data_url(
+            df, parent_cache_dir_url, parquet_row_group_size_bytes, compression_codec, dtype)
+
+        spark = petastorm_internal._get_spark_session()
+
+        dbutils = DBUtils(spark.sparkContext)
+        dbutils.fs.cp(dataset_cache_dir_url.replace("file:///dbfs/", "dbfs:/"), dataset_cache_dir_url, True)
+
+        spark_df = spark.read.parquet(dataset_cache_dir_url)
+        dataset_size = spark_df.count()
+
+        #parquet_file_url_list = list(spark_df._jdf.inputFiles())
+        parquet_file_url_list = [Path(f).as_uri() for f in glob(urlparse(dataset_cache_dir_url).path+"/*.parquet")]
+
+        petastorm_internal._check_dataset_file_median_size(parquet_file_url_list)
+
+        return SparkDatasetConverter(dataset_cache_dir_url, parquet_file_url_list, dataset_size)
 
 
-def autopatch_petastorm(config_location: str, petastorm_cache: str, **kwargs) -> None:
-    """
-        Detects running in Databricks Connect environment by checking whether config
-        location is on DBFS or on local filesystem. If config location is on the local
-        filesystem, reconfigures Petastorm to pull materialized data set using dbutils.
+    def adapt_petastorm_to_databricks_connect() -> None:
+        """
+            Makes Petastorm work over Databricks Connect by pulling Petastorm-materialized dataset to the
+            local volume using dbutils.
 
-        :param config_location: app configuration location
-        :param petastorm_cache: file:// URL for the local petastorm cache location
-        :return: returns nothing
-    """
-    try:
-        config_scheme: str = urlparse(config_location).scheme
-    except:
-        config_scheme = ""
-    if not config_scheme:
-        config_scheme = "file"
-    if config_scheme != "dbfs":
-        print(f"Config location {config_location} is a {config_scheme} URL, not a DBFS URL. Monkey-patching Petastorm for local debugging.")
-        adapt_petastorm_to_databricks_connect()
-        petastorm_cache = urlparse(petastorm_cache).path
-        if not os.path.isdir(petastorm_cache):
-            os.makedirs(petastorm_cache, exist_ok=True)
+            :return: returns nothing
+        """
+        import petastorm
+        assert petastorm.__version__ == '0.9.2', "Supports only petastorm==0.9.2"
+        petastorm.spark.spark_dataset_converter.make_spark_converter = make_spark_converter
+
+
+    def autopatch_petastorm(config_location: str, petastorm_cache: str, **kwargs) -> None:
+        """
+            Detects running in Databricks Connect environment by checking whether config
+            location is on DBFS or on local filesystem. If config location is on the local
+            filesystem, reconfigures Petastorm to pull materialized data set using dbutils.
+
+            :param config_location: app configuration location
+            :param petastorm_cache: file:// URL for the local petastorm cache location
+            :return: returns nothing
+        """
+        try:
+            config_scheme: str = urlparse(config_location).scheme
+        except:
+            config_scheme = ""
+        if not config_scheme:
+            config_scheme = "file"
+        if config_scheme != "dbfs":
+            print(f"Config location {config_location} is a {config_scheme} URL, not a DBFS URL. Monkey-patching Petastorm for local debugging.")
+            adapt_petastorm_to_databricks_connect()
+            petastorm_cache = urlparse(petastorm_cache).path
+            if not os.path.isdir(petastorm_cache):
+                os.makedirs(petastorm_cache, exist_ok=True)
+
+except ImportError as e:
+
+    print(f"Detected import error: {e}. Petastorm operations will not be available.")
+
+    def autopatch_petastorm(config_location: str, petastorm_cache: str, **kwargs) -> None:
+        pass
 
 
 class Harness(ABC):
