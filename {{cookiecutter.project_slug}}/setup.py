@@ -5,6 +5,5 @@ setup(
     packages=find_packages(),
     version='{{cookiecutter.version}}',
     description='{{cookiecutter.description}}',
-    author='{{cookiecutter.author}}',
-    license='{{cookiecutter.license}}',
+    author='{{cookiecutter.author}}'
 )

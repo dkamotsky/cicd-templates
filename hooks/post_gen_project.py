@@ -10,7 +10,7 @@ def remove(filepath):
     elif os.path.isdir(filepath):
         shutil.rmtree(filepath)
 
-cicd_tool = '{{cookiecutter.cicd_tool}}'
+cicd_tool = 'GitHub Actions'
 
 if cicd_tool == 'GitHub Actions':
     # remove top-level file inside the generated folder
@@ -18,4 +18,4 @@ if cicd_tool == 'GitHub Actions':
 if cicd_tool == 'Azure DevOps':
     # remove top-level file inside the generated folder
     remove('.github')
-	
+
