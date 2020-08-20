@@ -44,7 +44,7 @@ export PYTHONPATH="$PYTHONPATH:.."
 echo "Modified for unit tests: PYTHONPATH = $PYTHONPATH"
 python -m pytest
 
-if [ $? -eq 0 ];then
+if [ $? -eq 0 -o $? -eq 5 ];then
     echo
     echo
     echo "Unit Tests SUCCESS"

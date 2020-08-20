@@ -4,6 +4,15 @@ from oktest import ok
 from itertools import cycle
 
 
+try:
+    # pylint: disable=import-error
+    import tensorflow as tf
+    from {{cookiecutter.project_slug}}.data import WrappedTensorflowDataHolder
+except:
+    pytest.skip("Skipping unit tests which require Tensorflow, because Tensorflow is not installed.",
+                allow_module_level=True)
+
+
 DS_LEN: int = 131
 DS_LIMIT: int = 1000
 DS_READ_BATCH: int = 11
@@ -12,7 +21,6 @@ DS_WRITE_BATCH: int = 7
 
 @pytest.fixture
 def dataset():
-    import tensorflow as tf
     iterator = cycle(range(DS_LEN))
     def _gen():
         yield from iterator
@@ -20,8 +28,6 @@ def dataset():
 
 
 def test_wrapper(dataset):
-    import tensorflow as tf
-    from {{cookiecutter.project_slug}}.data import WrappedTensorflowDataHolder
     wrapper = WrappedTensorflowDataHolder(dataset, DS_LEN, DS_LIMIT, DS_WRITE_BATCH, False)
     wrapper.oneshot = True
     with wrapper as (ds, one_epoch_in_batches):
