@@ -11,7 +11,7 @@ stages:
   - action
 
 before_script:
-    - ": \"${DATABRICKS_TOKEN:?DATABRICKS_TOKEN secret must be set and non-empty.}\""
+    - ": \"${databricks_ci_token:?databricks_ci_token secret must be set and non-empty.}\""
     - git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
 
 GitHub onpush Action:
@@ -19,7 +19,7 @@ GitHub onpush Action:
   stage: action
   script:
     - act --list -P ubuntu-latest=dkamotsky/action:latest push
-    - act -P ubuntu-latest=dkamotsky/action:latest -s DATABRICKS_HOST=$DATABRICKS_HOST -s DATABRICKS_TOKEN=$DATABRICKS_TOKEN push
+    - act -P ubuntu-latest=dkamotsky/action:latest -s DATABRICKS_HOST=$DATABRICKS_HOST -s DATABRICKS_TOKEN=$databricks_ci_token push
   rules:
     - if: '$CI_COMMIT_BRANCH'
 
@@ -28,6 +28,6 @@ GitHub onrelease Action:
   stage: action
   script:
     - act --list -P ubuntu-latest=dkamotsky/action:latest release
-    - act -P ubuntu-latest=dkamotsky/action:latest -s DATABRICKS_HOST=$DATABRICKS_HOST -s DATABRICKS_TOKEN=$DATABRICKS_TOKEN release
+    - act -P ubuntu-latest=dkamotsky/action:latest -s DATABRICKS_HOST=$DATABRICKS_HOST -s DATABRICKS_TOKEN=$databricks_ci_token release
   rules:
     - if: '$CI_COMMIT_TAG =~ /^release_.+/'
