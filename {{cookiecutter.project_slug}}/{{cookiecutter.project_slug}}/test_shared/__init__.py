@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from typing import MutableMapping, Any, Optional, Mapping
 from pyspark.sql import SparkSession, DataFrame
 from mlflow.tracking import MlflowClient
-from ..config import read_config, setup_mlflow
+from ..config import read_config, setup_mlflow, delta_jar_location
 
 try:
 
@@ -105,6 +105,27 @@ except ImportError as e:
         pass
 
 
+def autoinstall_delta_lake(spark: SparkSession, config_location: str, **kwargs) -> None:
+    """
+        Detects running in Databricks Connect environment by checking whether config
+        location is on DBFS or on local filesystem. If config location is on the local
+        filesystem, adds Delta Lake libraries to Python path from JAR.
+
+        :param config_location: app configuration location
+        :return: returns nothing
+    """
+    try:
+        config_scheme: str = urlparse(config_location).scheme
+    except:
+        config_scheme = ""
+    if not config_scheme:
+        config_scheme = "file"
+    if config_scheme != "dbfs":
+        delta_jar: str = delta_jar_location()
+        print(f"Config location {config_location} is a {config_scheme} URL, not a DBFS URL. Installing Delta Lake API from {delta_jar}.")
+        spark.sparkContext.addPyFile(delta_jar)
+
+
 class Harness(ABC):
     """
     Test Harness for training, evaluating, and promoting an ML model.
@@ -155,9 +176,12 @@ class Harness(ABC):
 
         app_name: str = conf['app_name']
         print(f"Test application name: {app_name}")
-        spark: SparkSession = SparkSession.builder.appName(app_name).getOrCreate()
-        experiment_id: str = setup_mlflow(**conf)
 
+        spark: SparkSession = SparkSession.builder.appName(app_name).getOrCreate()
+
+        autoinstall_delta_lake(spark, **conf)
+
+        experiment_id: str = setup_mlflow(**conf)
         print(f"Context set to MLFlow experiment {experiment_id}.")
 
         run_id: str = self._train(spark, conf)

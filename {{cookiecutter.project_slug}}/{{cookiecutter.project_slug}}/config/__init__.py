@@ -2,12 +2,16 @@
 config module contains convenience functions for reading application settings
 """
 
-
+import os
 import mlflow
 import yaml
 import time
 from typing import MutableMapping, Any
 from . import settings
+
+
+def delta_jar_location() -> str:
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), "../../lib/delta-core_2.12-0.7.0.jar"))
 
 
 def read_config(config_file_name: str, root: str) -> MutableMapping[str, Any]:
