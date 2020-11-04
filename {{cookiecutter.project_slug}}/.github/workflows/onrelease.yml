@@ -38,7 +38,7 @@ jobs:
 
       - name: Deploy acceptance tests
         run: |
-          dbx deploy --jobs={{cookiecutter.project_slug}}-acc-test
+          dbx deploy --jobs={{cookiecutter.project_slug}}-acc-test --requirements-file=cloud-requirements.txt
 
       - name: Run acceptance tests
         run: |
@@ -46,4 +46,4 @@ jobs:
 
       - name: Deploy the production job
         run: |
-          dbx deploy --jobs={{cookiecutter.project_slug}}-production
+          dbx deploy --jobs={{cookiecutter.project_slug}}-production --requirements-file=cloud-requirements.txt

@@ -41,7 +41,7 @@ jobs:
 
       - name: Deploy functional test job
         run: |
-          dbx deploy --jobs={{cookiecutter.project_slug}}-func-test
+          dbx deploy --jobs={{cookiecutter.project_slug}}-func-test --requirements-file=cloud-requirements.txt
 
       - name: Run functional test job
         run: |
