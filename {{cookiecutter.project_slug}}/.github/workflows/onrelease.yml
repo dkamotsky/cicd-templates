@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      { % raw % }
       MLFLOW_TRACKING_URI: 'databricks'
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-      {% endraw %}
+      DATABRICKS_HOST: {{ ${{ secrets.DATABRICKS_HOST }} }}
+      DATABRICKS_TOKEN: {{ ${{ secrets.DATABRICKS_TOKEN }} }}
 
     steps:
       - uses: actions/checkout@v1
