@@ -1,7 +1,7 @@
 {
-  "project_name": "cicd-sample-project",
+  "project_name": "corning_project",
   "version": "0.0.1",
-  "description": "Databricks Labs CICD Templates Sample Project",
+  "description": "Sample Corning CICD Project",
   "author": "",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "workspace_dir": "/Shared/dbx/{{cookiecutter.project_slug}}",
