@@ -1,5 +1,5 @@
 {
-  "production": {
+  "default": {
     "jobs": [
       {
         "name": "{{cookiecutter.project_slug}}",
