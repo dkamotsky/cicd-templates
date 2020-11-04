@@ -1,11 +1,21 @@
 {
-  "project_name": "corning_project",
-  "version": "0.1.0",
-  "description": "Sample Corning CICD Project",
-  "author": "Denis Kamotsky",
-  "mlflow_experiment_path": "/Shared-ADMIN/automation/cicd",
+  "project_name": "cicd-sample-project",
+  "version": "0.0.1",
+  "description": "Databricks Labs CICD Templates Sample Project",
+  "author": "",
+  "cloud": [
+    "AWS",
+    "Azure"
+  ],
+  "cicd_tool": [
+    "GitHub Actions",
+    "Azure DevOps"
+  ],
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "workspace_dir": "/Shared/dbx/{{cookiecutter.project_slug}}",
+  "artifact_location": "dbfs:/Shared/dbx/projects/{{cookiecutter.project_slug}}",
+  "profile": "DEFAULT",
   "_copy_without_render": [
-        "*.github*"
-    ]
+    "*.github"
+  ]
 }

@@ -1,36 +1,75 @@
-name: Python package
+name: Release pipeline
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
 
 jobs:
-  release:
+  release-pipeline:
+
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ 3.7 ]
 
     env:
-      MLFLOW_TRACKING_URI: 'databricks'
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_HOST: ${{{{ secrets.DATABRICKS_HOST }}}}
+      DATABRICKS_TOKEN:  ${{{{ secrets.DATABRICKS_TOKEN }}}}
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Announce
-      run: |
-        echo "Running ONRELEASE GitHub Action"
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install deployment/databrickslabs_cicdtemplates-0.2.3-py3-none-any.whl
+      - name: Install pip
+        run: |
+          python -m pip install --upgrade pip
 
-    - name: Build artifact
-      run: |
-        python setup.py bdist_wheel
+      - name: Install dependencies
+        run: |
+          pip install -r unit-requirements.txt
+          pip install -U tools/dbx-0.7.0-py3-none-any.whl
+          pip install -e .
 
-    - name: Deploy artifact
-      run: |
-        python -c "from databrickslabs_cicdtemplates import release_cicd_pipeline; release_cicd_pipeline.main('integration-tests', 'pipelines', True);"
+      - name: Run unit tests
+        run: |
+          echo "Launching unit tests"
+          pytest tests/unit
+
+      - name: Prepare profile
+        run: |
+          echo "[{profile}]" >> ~/.databrickscfg
+          echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
+          echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
+
+      - name: Deploy integration test
+        run: |
+          dbx deploy --jobs={project_name}-sample-integration-test
+
+      - name: Run integration test
+        run: |
+          dbx launch --job={project_name}-sample-integration-test --trace
+
+      - name: Deploy the job
+        run: |
+          dbx deploy --jobs={project_name}-sample
+
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{{{ secrets.GITHUB_TOKEN }}}} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{{{ github.ref }}}}
+          release_name: Release ${{{{ github.ref }}}}
+          body: |
+            Release for version ${{{{ github.ref }}}}
+          draft: false
+          prerelease: false
+

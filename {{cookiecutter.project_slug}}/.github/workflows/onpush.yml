@@ -1,39 +1,59 @@
-name: Python package
+name: Test pipeline
 
-on: [push]
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*' # this tag type is used for release pipelines
 
 jobs:
-  build:
+  test-pipeline:
 
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
 
     env:
-      MLFLOW_TRACKING_URI: 'databricks'
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_HOST: ${{{{ secrets.DATABRICKS_HOST }}}}
+      DATABRICKS_TOKEN:  ${{{{ secrets.DATABRICKS_TOKEN }}}}
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Announce
-      run: |
-        echo "Running ONPUSH GitHub Action"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7.5
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install deployment/databrickslabs_cicdtemplates-0.2.3-py3-none-any.whl
+      - name: Install pip
+        run: |
+          python -m pip install --upgrade pip
 
-    - name: Test with the test script
-      run: |
-        ./tests/main.sh
-       
-    - name: Build artifact
-      run: |
-        python setup.py bdist_wheel
+      - name: Install dependencies
+        run: |
+          pip install -r unit-requirements.txt
+          pip install -U tools/dbx-0.7.0-py3-none-any.whl
+          pip install -e .
 
-    - name: Deploy artifact
-      run: |
-        python -c "from databrickslabs_cicdtemplates import dev_cicd_pipeline; dev_cicd_pipeline.main('dev-tests');"
+      - name: Run unit tests
+        run: |
+          echo "Launching unit tests"
+          pytest tests/unit
+
+      - name: Prepare profile
+        run: |
+          echo "[{profile}]" >> ~/.databrickscfg
+          echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
+          echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
+
+      - name: Deploy integration test
+        run: |
+          dbx deploy --jobs={project_name}-sample-integration-test
+
+      - name: Run integration test
+        run: |
+          dbx launch --job={project_name}-sample-integration-test --trace
+
+
 

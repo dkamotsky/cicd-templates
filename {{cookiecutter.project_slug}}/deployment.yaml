@@ -1,3 +1,0 @@
-model-name: {{cookiecutter.project_slug}}_cicd
-experiment-path: {{cookiecutter.mlflow_experiment_path}}
-cloud: AWS
