@@ -1,11 +1,8 @@
 import json
 import os
-import shutil
-
 from path import Path
 
-cicd_tool = '{{cookiecutter.cicd_tool}}'
-cloud = '{{cookiecutter.cloud}}'
+org = 'CET'
 project = '{{cookiecutter.project_slug}}'
 environment = 'default'
 profile = '{{cookiecutter.profile}}'
@@ -23,7 +20,7 @@ PROJECT_FILE_CONTENT = {
 }
 
 DEPLOYMENT = {
-    "AWS": {
+    "CET": {
         environment: {
             "jobs": [
                 {
@@ -61,52 +58,6 @@ DEPLOYMENT = {
                             "first_on_demand": 0,
                             "availability": "SPOT"
                         },
-                        "num_workers": 1
-                    },
-                    "libraries": [],
-                    "email_notifications": {
-                        "on_start": [],
-                        "on_success": [],
-                        "on_failure": []
-                    },
-                    "max_retries": 0,
-                    "spark_python_task": {
-                        "python_file": "tests/integration/sample_test.py"
-                    }
-                }
-            ]
-        }
-    },
-    "Azure": {
-        environment: {
-            "jobs": [
-                {
-                    "name": "%s-sample" % project,
-                    "new_cluster": {
-                        "spark_version": "7.2.x-cpu-ml-scala2.12",
-                        "node_type_id": "Standard_F4s",
-                        "num_workers": 2
-                    },
-                    "libraries": [],
-                    "email_notifications": {
-                        "on_start": [],
-                        "on_success": [],
-                        "on_failure": []
-                    },
-                    "max_retries": 0,
-                    "spark_python_task": {
-                        "python_file": "%s/jobs/sample/entrypoint.py" % project,
-                        "parameters": [
-                            "--conf-file",
-                            "conf/test/sample.json"
-                        ]
-                    }
-                },
-                {
-                    "name": "%s-sample-integration-test" % project,
-                    "new_cluster": {
-                        "spark_version": "7.2.x-cpu-ml-scala2.12",
-                        "node_type_id": "Standard_F4s",
                         "num_workers": 1
                     },
                     "libraries": [],
@@ -140,16 +91,10 @@ class PostProcessor:
     @staticmethod
     def process():
 
-        if cicd_tool == 'GitHub Actions':
-            os.remove("azure-pipelines.yml")
+        replace_vars(".github/workflows/onpush.yml")
+        replace_vars(".github/workflows/onrelease.yml")
 
-            replace_vars(".github/workflows/onpush.yml")
-            replace_vars(".github/workflows/onrelease.yml")
-
-        if cicd_tool == 'Azure DevOps':
-            shutil.rmtree(".github")
-
-        deployment = json.dumps(DEPLOYMENT[cloud], indent=4)
+        deployment = json.dumps(DEPLOYMENT[org], indent=4)
         deployment_file = Path("conf/deployment.json")
         if not deployment_file.parent.exists():
             deployment_file.parent.mkdir()
