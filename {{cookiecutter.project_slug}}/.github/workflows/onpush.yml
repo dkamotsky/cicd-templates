@@ -1,30 +1,23 @@
-name: Test pipeline
+name: Functional Test Pipeline
 
-on:
-  push:
-    branches:
-      - '**'
-    tags-ignore:
-      - 'v*' # this tag type is used for release pipelines
+on: [push]
 
 jobs:
-  test-pipeline:
+  functional-tests:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
 
     env:
+      MLFLOW_TRACKING_URI: 'databricks'
       DATABRICKS_HOST: ${{{{ secrets.DATABRICKS_HOST }}}}
-      DATABRICKS_TOKEN:  ${{{{ secrets.DATABRICKS_TOKEN }}}}
+      DATABRICKS_TOKEN: ${{{{ secrets.DATABRICKS_TOKEN }}}}
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7.5
+      - name: Announce
+        run: |
+          echo "Running ONPUSH GitHub Action"
 
       - name: Install pip
         run: |
@@ -32,28 +25,24 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r unit-requirements.txt
+          pip install -r test-requirements.txt
           pip install -U tools/dbx-0.7.0-py3-none-any.whl
           pip install -e .
 
-      - name: Run unit tests
+      - name: Test with the test script
         run: |
-          echo "Launching unit tests"
-          pytest tests/unit
+          ./tests/main.sh
 
       - name: Prepare profile
         run: |
-          echo "[{profile}]" >> ~/.databrickscfg
+          echo "[{{cookiecutter.profile}}]" >> ~/.databrickscfg
           echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
           echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
 
-      - name: Deploy integration test
+      - name: Deploy functional test job
         run: |
-          dbx deploy --jobs={project_name}-sample-integration-test
+          dbx deploy --jobs={{cookiecutter.project_slug}}-func-test
 
-      - name: Run integration test
+      - name: Run functional test job
         run: |
-          dbx launch --job={project_name}-sample-integration-test --trace
-
-
-
+          dbx launch --job={{cookiecutter.project_slug}}-func-test --trace

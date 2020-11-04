@@ -2,7 +2,7 @@
   "default": {
     "jobs": [
       {
-        "name": "{{cookiecutter.project_slug}}",
+        "name": "{{cookiecutter.project_slug}}-production",
         "new_cluster": {
           "spark_version": "7.1.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -46,7 +46,7 @@
           "timezone_id": "America/New_York"
         },
         "spark_python_task": {
-          "python_file": f"{project}/jobs/sample/entrypoint.py",
+          "python_file": "{{cookiecutter.project_slug}}/jobs/sample/entrypoint.py",
           "parameters": [
             "--conf-file",
             "conf/test/sample.json"
