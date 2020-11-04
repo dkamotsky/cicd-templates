@@ -2,7 +2,7 @@
   "default": {
     "jobs": [
       {
-        "name": "{{cookiecutter.project_slug}}-production",
+        "name": "{{cookiecutter.project_slug}}-sample-production",
         "new_cluster": {
           "spark_version": "7.1.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -54,7 +54,7 @@
         }
       },
       {
-        "run_name": "{{cookiecutter.project_slug}}-acc-test",
+        "run_name": "{{cookiecutter.project_slug}}-sample-acc-test",
         "new_cluster": {
           "spark_version": "7.1.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -87,11 +87,11 @@
           "policy_id": "A15E27AEE2000012"
         },
         "spark_python_task": {
-          "python_file": "tests/integration/sample_test.py"
+          "python_file": "tests/acceptance/sample_test.py"
         }
       },
       {
-        "run_name": "{{cookiecutter.project_slug}}-func-test",
+        "run_name": "{{cookiecutter.project_slug}}-sample-func-test",
         "new_cluster": {
           "spark_version": "7.1.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -124,7 +124,7 @@
           "policy_id": "A15E27AEE2000012"
         },
         "spark_python_task": {
-          "python_file": "tests/integration/sample_test.py"
+          "python_file": "tests/functional/sample_test.py"
         }
       }
     ]
