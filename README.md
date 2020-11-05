@@ -57,6 +57,7 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 │       └── sample_test.py
 ├── tools
 │   └── dbx-0.7.0-py3-none-any.whl
+├── docker
 ├── utils
 │   └── cloud_cleanup.sh
 │   └── delete_model.py
@@ -69,6 +70,7 @@ Some explanations regarding structure:
 - `tests` - directory with your package tests
 - `conf/deployment.json` - deployment configuration file. Please read the [following section](#deployment-file-structure) for a full reference.
 - `.github/workflows/` - workflow definitions for GitHub Actions. These actions are triggered by .gitlab-ci.yml
+- `docker` - Dockerfiles and docker-compose configurations to run Jupyter server and dbx tool in the context of the generated project
 
 
 ## Quickstart
