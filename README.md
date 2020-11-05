@@ -86,24 +86,25 @@ If you don't need to use ML libraries, we still recommend to use ML-based versio
 ### Local steps
 Perform the following actions in your development environment:
 - Install Anaconda
-- Create new conda environment and activate it (if using IDE, such as PyCharm, use IDE UI rather than command line):
+- Install databricks-cli, cookiecutter and path (if this doesn't work on Windows, follow directions from [Cookiecutter Manual](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html)):
 ```bash
-conda create -n <your-environment-name> python=3.7.5
-conda activate <your-environment-name>
+pip install databricks-cli cookiecutter path
 ```
-- Create your personal Databricks token, and copy it.
-- Configure your Databricks CLI using the copied token.
+- Create your personal Databricks token, and copy it
+- Configure your Databricks CLI using the copied token (if using IDE, make sure to run command line from IDE, so that the project's Conda environment is active)
 ```bash
 databricks configure --token
-```
-- Install cookiecutter and path (if this doesn't work on Windows, follow directions from [Cookiecutter Manual](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html)):
-```bash
-pip install cookiecutter path
 ```
 - Create a new project using cookiecutter template:
 ```
 cookiecutter https://<your_id>:<your_token>@gitlab.toolchain.corning.com/kairos/templates/generic-project.git
 ```
+- If not using IDE, create new conda environment and activate it:
+```bash
+conda create -n <your-environment-name> python=3.7.5
+conda activate <your-environment-name>
+```
+- If using IDE (such as PyCharm), use the IDE's UI to import the project you created, and configure a Python 3.7 interpreter for it using Conda environment type
 - Switch to the project directory and install `dbx`:
 ```bash
 pip install -U tools/dbx-0.7.0-py3-none-any.whl
