@@ -15,7 +15,7 @@ RUN pip install --upgrade pip
 
 # /{{cookiecutter.project_slug}} is not mounted yet!
 COPY ./tools /tools
-RUN pip install --no-deps --no-cache-dir /tools/dbx-0.7.0-py3-none-any.whl
+RUN pip install --no-cache-dir /tools/dbx-0.7.0-py3-none-any.whl
 
 # /{{cookiecutter.project_slug}} is not mounted yet!
 COPY ./requirements.txt /requirements.txt
