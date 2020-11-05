@@ -27,14 +27,14 @@ For a functional test on interactive cluster, use the following command:
 ```
 dbx execute \
     --cluster-name=<name of interactive cluster> \
-    --job={{cookiecutter.project_name}}_sample_func_test \
+    --job={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test \
     --requirements-file=conf/cloud-requirements.txt
 ```
 
 For a test on a automated job cluster, use `launch` instead of `execute`:
 ```
 dbx launch \
-    --job={{cookiecutter.project_name}}_sample_func_test \
+    --job={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test \
     --requirements-file=conf/cloud-requirements.txt
 ```
 
@@ -63,7 +63,7 @@ By default, deployment configuration is stored in `conf/deployment.json`.
 To start new deployment, launch the following command:  
 
 ```bash
-dbx deploy --jobs={{cookiecutter.project_name}}_sample_production --requirements-file=conf/cloud-requirements.txt
+dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_production --requirements-file=conf/cloud-requirements.txt
 ```
 
 You can optionally provide requirements.txt via `--requirements` option, all requirements will be automatically added to the job definition.
@@ -73,7 +73,7 @@ You can optionally provide requirements.txt via `--requirements` option, all req
 After the deploy, launch the job via the following command:
 
 ```
-dbx launch --job={{cookiecutter.project_name}}_sample_production
+dbx launch --job={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_production
 ```
 
 ## CICD pipeline settings

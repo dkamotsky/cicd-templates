@@ -4,6 +4,7 @@
   "description": "Sample Corning CICD Project",
   "author": "",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
-  "workspace_dir": "/Shared-ADMIN/automation/dbx/{{cookiecutter.project_slug}}",
-  "artifact_location": "dbfs:/Shared-ADMIN/automation/dbx/projects/{{cookiecutter.project_slug}}",
+  "corning_division": "ADMIN",
+  "workspace_dir": "/Shared-{{cookiecutter.corning_division}}/automation/dbx/{{cookiecutter.project_slug}}",
+  "artifact_location": "dbfs:/Shared-{{cookiecutter.corning_division}}/automation/dbx/projects/{{cookiecutter.project_slug}}"
 }

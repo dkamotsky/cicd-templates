@@ -2,7 +2,7 @@
   "default": {
     "jobs": [
       {
-        "name": "{{cookiecutter.project_slug}}_sample_production",
+        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_production",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -30,7 +30,7 @@
           },
           "cluster_source": "JOB",
           "custom_tags": {
-            "Application": "user-DBKcluster-ADM"
+            "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
           "policy_id": "A15E27AEE2000012"
         },
@@ -54,7 +54,7 @@
         }
       },
       {
-        "name": "{{cookiecutter.project_slug}}_sample_acc_test",
+        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_acc_test",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -82,7 +82,7 @@
           },
           "cluster_source": "JOB",
           "custom_tags": {
-            "Application": "user-DBKcluster-ADM"
+            "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
           "policy_id": "A15E27AEE2000012"
         },
@@ -91,7 +91,7 @@
         }
       },
       {
-        "name": "{{cookiecutter.project_slug}}_sample_func_test",
+        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -119,7 +119,7 @@
           },
           "cluster_source": "JOB",
           "custom_tags": {
-            "Application": "user-DBKcluster-ADM"
+            "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
           "policy_id": "A15E27AEE2000012"
         },
