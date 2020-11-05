@@ -7,7 +7,7 @@ While using this project, you need Python 3.X and `pip` or `conda` for package m
 ## Installing project requirements
 
 ```bash
-pip install -r unit-requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Install project package in a developer mode
@@ -23,14 +23,19 @@ For local unit testing, please use `pytest`:
 pytest tests/unit
 ```
 
-For an integration test on interactive cluster, use the following command:
+For a functional test on interactive cluster, use the following command:
 ```
-dbx execute --cluster-name=<name of interactive cluster> --job={{cookiecutter.project_name}}-sample-integration-test
+dbx execute \
+    --cluster-name=<name of interactive cluster> \
+    --job={{cookiecutter.project_name}}_sample_func_test \
+    --requirements-file=conf/cloud-requirements.txt
 ```
 
 For a test on a automated job cluster, use `launch` instead of `execute`:
 ```
-dbx launch --job={{cookiecutter.project_name}}-sample-integration-test
+dbx launch \
+    --job={{cookiecutter.project_name}}_sample_func_test \
+    --requirements-file=conf/cloud-requirements.txt
 ```
 
 ## Interactive execution and development
@@ -41,7 +46,8 @@ dbx launch --job={{cookiecutter.project_name}}-sample-integration-test
 ```bash
 dbx execute \
     --cluster-name="<some-cluster-name>" \
-    --job=job-name
+    --job=job-name \
+    --requirements-file=conf/cloud-requirements.txt
 ```
 
 Multiple users also can use the same cluster for development. Libraries will be isolated per each execution context.
@@ -57,7 +63,7 @@ By default, deployment configuration is stored in `conf/deployment.json`.
 To start new deployment, launch the following command:  
 
 ```bash
-dbx deploy
+dbx deploy --jobs={{cookiecutter.project_name}}_sample_production --requirements-file=conf/cloud-requirements.txt
 ```
 
 You can optionally provide requirements.txt via `--requirements` option, all requirements will be automatically added to the job definition.
@@ -67,12 +73,33 @@ You can optionally provide requirements.txt via `--requirements` option, all req
 After the deploy, launch the job via the following command:
 
 ```
-dbx launch --job={{cookiecutter.project_name}}-sample
+dbx launch --job={{cookiecutter.project_name}}_sample_production
 ```
 
 ## CICD pipeline settings
 
-Please set the following secrets or environment variables. 
-Follow the documentation for [GitHub Actions](https://docs.github.com/en/actions/reference) or for [Azure DevOps Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch):
-- `DATABRICKS_HOST`
+Please set the following masked variable:
+Follow the documentation for [GitLab](https://docs.gitlab.com/ee/ci/variables/#mask-a-custom-variable):
 - `DATABRICKS_TOKEN`
+
+## Databricks Connect
+
+You can run code locally in your IDE using Databricks Connect.
+- First uninstall pyspark:
+```bash
+pip uninstall pyspark
+```
+- Install Databricks Connect (this version must match expectations in requirements.txt, 7.3 CPU ML by default):
+```bash
+pip install databricks-connect==7.3.3b0
+```
+- Configure Databricks Connect:
+```bash
+databricks-connect configure
+```
+- Make sure java 1.8 is installed and is on your PATH!
+- Test Databricks Connect:
+```bash
+databricks-connect test
+```
+- If the test is successful, now you can run and debug code directly from IDE

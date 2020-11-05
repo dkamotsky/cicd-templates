@@ -5,26 +5,25 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 ## Table of Contents
 * [Databricks Labs CI/CD Templates](#databricks-labs-cicd-templates)
   * [CLI example](#cli-example)
-  * [Sample project structure (with GitHub Actions)](#sample-project-structure-with-github-actions)
-  * [Sample project structure (with Azure DevOps)](#sample-project-structure-with-azure-devops)
+  * [Sample project structure](#sample-project-structure)
   * [Quickstart](#quickstart)
      * [Local steps](#local-steps)
-     * [Setting up CI/CD pipeline on GitHub Actions](#setting-up-cicd-pipeline-on-github-actions)
-     * [Setting up CI/CD pipeline on Azure DevOps](#setting-up-cicd-pipeline-on-azure-devops)
+     * [Setting up CI/CD pipeline](#setting-up-cicd-pipeline)
   * [Deployment file structure](#deployment-file-structure)
   * [FAQ](#faq)
-  * [Legal Information](#legal-information)
-  * [Feedback](#feedback)
-  * [Contributing](#contributing)
-  * [Kudos](#kudos)
+  * [Kudos](#kudos)  
 
 
 ## CLI example
 [![asciicast](https://asciinema.org/a/7XZIQydVgbr3WlrCDpwA9gcOU.svg)](https://asciinema.org/a/7XZIQydVgbr3WlrCDpwA9gcOU)
 
-## Sample project structure (with GitHub Actions)
+## Sample project structure
 ```
 .
+├── .gitlab-ci.yml
+├── .dbx
+│   ├── lock.json
+│   └── project.json
 ├── .github
 │   └── workflows
 │       ├── onpush.yml
@@ -32,13 +31,14 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 ├── .gitignore
 ├── README.md
 ├── conf
+│   ├── cloud-requirements.txt
 │   ├── deployment.json
 │   └── test
 │       └── sample.json
 ├── pytest.ini
 ├── sample_project
 │   ├── __init__.py
-│   ├── common.py
+│   ├── <various subpackages>
 │   └── jobs
 │       ├── __init__.py
 │       └── sample
@@ -46,13 +46,21 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 │           └── entrypoint.py
 ├── setup.py
 ├── tests
-│   ├── integration
+│   ├── main.sh
+│   ├── mypy.ini
+│   ├── pylint.rc
+│   ├── acceptance
+│   │   └── sample_test.py
+│   ├── functional
 │   │   └── sample_test.py
 │   └── unit
 │       └── sample_test.py
 ├── tools
 │   └── dbx-0.7.0-py3-none-any.whl
-└── unit-requirements.txt
+├── utils
+│   └── cloud_cleanup.sh
+│   └── delete_model.py
+└── requirements.txt
 ```
 
 Some explanations regarding structure:
@@ -60,46 +68,8 @@ Some explanations regarding structure:
 - `sample_project` - Python package with your code (the directory name will follow your project name)
 - `tests` - directory with your package tests
 - `conf/deployment.json` - deployment configuration file. Please read the [following section](#deployment-file-structure) for a full reference.
-- `.github/workflows/` - workflow definitions for GitHub Actions
+- `.github/workflows/` - workflow definitions for GitHub Actions. These actions are triggered by .gitlab-ci.yml
 
-## Sample project structure (with Azure DevOps)
-```
-.
-├── .dbx
-│   └── project.json
-├── .gitignore
-├── README.md
-├── azure-pipelines.yml
-├── conf
-│   ├── deployment.json
-│   └── test
-│       └── sample.json
-├── pytest.ini
-├── sample_project_azure_dev_ops
-│   ├── __init__.py
-│   ├── common.py
-│   └── jobs
-│       ├── __init__.py
-│       └── sample
-│           ├── __init__.py
-│           └── entrypoint.py
-├── setup.py
-├── tests
-│   ├── integration
-│   │   └── sample_test.py
-│   └── unit
-│       └── sample_test.py
-├── tools
-│   └── dbx-0.7.0-py3-none-any.whl
-└── unit-requirements.txt
-```
-
-Some explanations regarding structure:
-- `.dbx` folder is an auxiliary folder, where metadata about environments and execution context is located.
-- `sample_project_azure_dev_ops` - Python package with your code (the directory name will follow your project name)
-- `tests` - directory with your package tests
-- `conf/deployment.json` - deployment configuration file. Please read the [following section](#deployment-file-structure) for a full reference.
-- `azure-pipelines.yml` - Azure DevOps Pipelines workflow definition
 
 ## Quickstart
 
@@ -110,12 +80,18 @@ If you don't need to use ML libraries, we still recommend to use ML-based versio
 
 ### Local steps
 Perform the following actions in your development environment:
-- Create new conda environment and activate it:
+- Install Anaconda
+- Create new conda environment and activate it (if using IDE, such as PyCharm, use IDE UI rather than command line):
 ```bash
 conda create -n <your-environment-name> python=3.7.5
 conda activate <your-environment-name>
 ```
-- Install cookiecutter and path:
+- Create your personal Databricks token, and copy it.
+- Configure your Databricks CLI using the copied token.
+```bash
+databricks configure --token
+```
+- Install cookiecutter and path (if this doesn't work on Windows, follow directions from [Cookiecutter Manual](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html)):
 ```bash
 pip install cookiecutter path
 ```
@@ -127,38 +103,30 @@ cookiecutter https://github.com/databrickslabs/cicd-templates
 ```bash
 pip install -U tools/dbx-0.7.0-py3-none-any.whl
 ```
+- Create your Databricks cluster, and copy its name. Ensure that Databricks Runtime version of your cluster matches the expectations in requirements.txt (7.3 CPU ML)
 - In the generated directory you'll have a sample job with testing and launch configurations around it.
 - Launch and debug your code on an interactive cluster via the following command. Job name could be found in `conf/deployment.json`:
 ```
-dbx execute --cluster-name=<my-cluster> --job=<job-name>
+dbx execute --cluster-name=<my-cluster> --job=<job-name> --requirements-file=conf/cloud-requirements.txt
 ```
 - Make your first deployment from the local machine:
 ```
-dbx deploy
+dbx deploy --jobs=<job-name> --requirements-file=conf/cloud-requirements.txt
 ```
 - Launch your first pipeline as a new separate job, and trace the job status. Job name could be found in `conf/deployment.json`:
 ```
-dbx launch --job <your-job-name> --trace
+dbx launch --job=<your-job-name>  --requirements-file=conf/cloud-requirements.txt --trace
 ```
 - For an in-depth local development and unit testing guidance, please refer to a generated `README.md` in the root of the project.
 
-### Setting up CI/CD pipeline on GitHub Actions
+### Setting up CI/CD pipeline
 
-- Create a new repository on GitHub
-- Configure `DATABRICKS_HOST` and `DATABRICKS_TOKEN` secrets for your project in [GitHub UI](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets)
+- Create a new repository on Corning Toolchain GitLab
+- Configure `DATABRICKS_TOKEN` masked variable for your project in [GitLab UI](https://docs.gitlab.com/ee/ci/variables/#mask-a-custom-variable)
 - Add a remote origin to the local repo
 - Push the code 
-- Open the GitHub Actions for your project to verify the state of the deployment pipeline
+- Open the GitLab CI/CD Pipelines for your project to verify the state of the deployment pipeline
 
-### Setting up CI/CD pipeline on Azure DevOps
-
-- Create a new repository on GitHub
-- Connect the repository to Azure DevOps
-- Configure `DATABRICKS_HOST` and `DATABRICKS_TOKEN` secrets for your project in [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/pipelines/release/azure-key-vault?view=azure-devops)
-- Add a remote origin to the local repo
-- Push the code 
-- Open the Azure DevOps UI to check the deployment status 
- 
 ## Deployment file structure
 A sample deployment file could be found in a generated project.
 
@@ -264,17 +232,6 @@ Sample section to `libraries` configuration:
 *A*: 
 This method should be primarily used for adapting configuration for `dbx execute` based run. 
 By using this method, you can provide an initial configuration in case if `--conf-file` option is not provided.  
-
-## Legal Information
-This software is provided as-is and is not officially supported by Databricks through customer technical support channels. 
-Support, questions, and feature requests can be communicated through the Issues page of this repo. 
-Please see the legal agreement and understand that issues with the use of this code will not be answered or investigated by Databricks Support.
-
-## Feedback
-Issues with template? Found a bug? Have a great idea for an addition? Feel free to file an issue.
-
-## Contributing
-Have a great idea that you want to add? Fork the repo and submit a PR!
 
 ## Kudos
 Project based on the [cookiecutter datascience project](https://drivendata.github.io/cookiecutter-data-science).
