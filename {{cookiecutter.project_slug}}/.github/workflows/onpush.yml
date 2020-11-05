@@ -34,7 +34,7 @@ jobs:
 
       - name: Prepare profile
         run: |
-          echo "[{{cookiecutter.profile}}]" >> ~/.databrickscfg
+          echo "[DEFAULT]" >> ~/.databrickscfg
           echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
           echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
 
