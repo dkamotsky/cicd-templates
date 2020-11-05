@@ -28,8 +28,6 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 │   └── workflows
 │       ├── onpush.yml
 │       └── onrelease.yml
-├── .gitignore
-├── README.md
 ├── conf
 │   ├── cloud-requirements.txt
 │   ├── deployment.json
@@ -55,9 +53,12 @@ This repository provides a template for automated Databricks CI/CD pipeline crea
 │   │   └── sample_test.py
 │   └── unit
 │       └── sample_test.py
+├── lib
+│   └── delta-core_2.12-0.7.0.jar
 ├── tools
 │   └── dbx-0.7.0-py3-none-any.whl
 ├── docker
+├── notebooks
 ├── utils
 │   └── cloud_cleanup.sh
 │   └── delete_model.py
@@ -71,6 +72,8 @@ Some explanations regarding structure:
 - `conf/deployment.json` - deployment configuration file. Please read the [following section](#deployment-file-structure) for a full reference.
 - `.github/workflows/` - workflow definitions for GitHub Actions. These actions are triggered by .gitlab-ci.yml
 - `docker` - Dockerfiles and docker-compose configurations to run Jupyter server and dbx tool in the context of the generated project
+- `notebooks` - Databricks Notebook example of how to access project wheel from the Databricks UI
+- `lib/delta-core_2.12-0.7.0.jar` - Delta jar used to enable Delta API in the sample code. Necessary because Delta API is not available on PyPI 
 
 
 ## Quickstart
@@ -97,9 +100,9 @@ databricks configure --token
 ```bash
 pip install cookiecutter path
 ```
-- Create new project using cookiecutter template. Please note that the profile should exist in your `~/.databrickscfg`:
+- Create a new project using cookiecutter template:
 ```
-cookiecutter https://github.com/databrickslabs/cicd-templates
+cookiecutter https://<your_id>:<your_token>@gitlab.toolchain.corning.com/kairos/templates/generic-project.git
 ```
 - Switch to the project directory and install `dbx`:
 ```bash
