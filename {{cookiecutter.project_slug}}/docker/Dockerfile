@@ -14,12 +14,12 @@ RUN apt-get install -y vim less
 RUN pip install --upgrade pip
 
 # /{{cookiecutter.project_slug}} is not mounted yet!
-COPY ./tools /tools
-RUN pip install --no-cache-dir /tools/dbx-0.7.0-py3-none-any.whl
-
-# /{{cookiecutter.project_slug}} is not mounted yet!
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
+
+# /{{cookiecutter.project_slug}} is not mounted yet!
+COPY ./tools /tools
+RUN pip install --no-cache-dir /tools/dbx-0.7.0-py3-none-any.whl
 
 ENV PYTHONPATH /{{cookiecutter.project_slug}}:./
 ENV JAVA_HOME /usr/local/openjdk-8
