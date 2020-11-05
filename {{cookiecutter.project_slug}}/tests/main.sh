@@ -4,7 +4,9 @@ echo "Running static Python type checks..."
 echo
 echo
 mypy --config-file ./tests/mypy.ini {{cookiecutter.project_slug}} && \
-mypy --config-file ./tests/mypy.ini tests
+mypy --config-file ./tests/mypy.ini tests/acceptance && \
+mypy --config-file ./tests/mypy.ini tests/functional && \
+mypy --config-file ./tests/mypy.ini tests/unit
 
 if [ $? -eq 0 ];then
     echo

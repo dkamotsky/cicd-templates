@@ -5,7 +5,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-      target: base
+      target: connect
     entrypoint:
       - /{{cookiecutter.project_slug}}/tests/main.sh
     volumes:
