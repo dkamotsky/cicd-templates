@@ -25,9 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r test-requirements.txt
+          pip install -r requirements.txt
           pip install -U tools/dbx-0.7.0-py3-none-any.whl
-          pip install -e .
 
       - name: Test with the test script
         run: |

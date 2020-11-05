@@ -1,15 +1,15 @@
 version: "3.8"
 
 services:
-  job:
+  run:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-      target: base
+      target: connect
     entrypoint:
-      - /{{cookiecutter.project_slug}}/docker/scripts/run_pipeline.sh
+      - /{{cookiecutter.project_slug}}/docker/scripts/launch_dbx.sh
     command:
-      - $NAME
+      - $ARGS
     volumes:
      - ..:/{{cookiecutter.project_slug}}
 

@@ -5,7 +5,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-      target: jupyter
+      target: connect
     ports:
      - "8888:8888" #default Jupyter port
      - "6006:6006" #tensorboard
@@ -13,7 +13,7 @@ services:
       - /bin/bash
     command:
       - -c
-      - echo 'Starting Jupyter with locally mounted filesystem...' && /{{cookiecutter.project_slug}}/docker/scripts/launch.sh
+      - echo 'Starting Jupyter with locally mounted filesystem...' && /{{cookiecutter.project_slug}}/docker/scripts/launch_jupyter.sh
     volumes:
      - ..:/{{cookiecutter.project_slug}}
 
