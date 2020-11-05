@@ -1,7 +1,7 @@
 {
   "environments": {
-    "production": {
-      "profile": "default",
+    "default": {
+      "profile": "DEFAULT",
       "workspace_dir": "{{cookiecutter.workspace_dir}}",
       "artifact_location": "{{cookiecutter.artifact_location}}"
     }

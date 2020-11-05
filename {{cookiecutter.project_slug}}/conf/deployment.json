@@ -4,7 +4,7 @@
       {
         "name": "{{cookiecutter.project_slug}}_sample_production",
         "new_cluster": {
-          "spark_version": "7.1.x-cpu-ml-scala2.12",
+          "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
           "driver_node_type_id": "i3.xlarge",
           "num_workers": 2,
@@ -54,9 +54,9 @@
         }
       },
       {
-        "run_name": "{{cookiecutter.project_slug}}_sample_acc_test",
+        "name": "{{cookiecutter.project_slug}}_sample_acc_test",
         "new_cluster": {
-          "spark_version": "7.1.x-cpu-ml-scala2.12",
+          "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
           "driver_node_type_id": "i3.xlarge",
           "num_workers": 2,
@@ -91,9 +91,9 @@
         }
       },
       {
-        "run_name": "{{cookiecutter.project_slug}}_sample_func_test",
+        "name": "{{cookiecutter.project_slug}}_sample_func_test",
         "new_cluster": {
-          "spark_version": "7.1.x-cpu-ml-scala2.12",
+          "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
           "driver_node_type_id": "i3.xlarge",
           "num_workers": 2,
