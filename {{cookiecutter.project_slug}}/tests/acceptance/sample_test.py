@@ -1,6 +1,7 @@
 import unittest
 from {{cookiecutter.project_slug}}.jobs.sample.entrypoint import SampleJob
 from uuid import uuid4
+# pylint: disable=no-name-in-module, import-error
 from pyspark.dbutils import DBUtils
 
 class SampleJobIntegrationTest(unittest.TestCase):
