@@ -12,7 +12,7 @@ assert len(dist_info) == 1
 dist_info = dist_info[0]
 lib_path = f"{source_run_info.artifact_uri}/{dist_info.path}"
 lib_path = re.sub(r"^dbfs:/", "/dbfs/", lib_path)
-job_info = [fi for fi in mlflow_client.list_artifacts(source_run_info.run_id, 'conf') if fi.path.endswith('cloud_requirements.txt')]
+job_info = [fi for fi in mlflow_client.list_artifacts(source_run_info.run_id, 'conf') if fi.path.endswith('cloud-requirements.txt')]
 assert len(job_info) == 1
 job_info = job_info[0]
 req_path = f"{source_run_info.artifact_uri}/{job_info.path}"
