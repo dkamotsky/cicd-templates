@@ -86,14 +86,9 @@ If you don't need to use ML libraries, we still recommend to use ML-based versio
 ### Local steps
 Perform the following actions in your development environment:
 - Install Anaconda
-- Install databricks-cli, cookiecutter and path (if this doesn't work on Windows, follow directions from [Cookiecutter Manual](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html)):
+- Install cookiecutter and path (if this doesn't work on Windows, follow directions from [Cookiecutter Manual](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html)):
 ```bash
-pip install databricks-cli cookiecutter path
-```
-- Create your personal Databricks token, and copy it
-- Configure your Databricks CLI using the copied token (if using IDE, make sure to run command line from IDE, so that the project's Conda environment is active)
-```bash
-databricks configure --token
+pip install cookiecutter path
 ```
 - Create a new project using cookiecutter template:
 ```
@@ -104,10 +99,20 @@ cookiecutter https://<your_id>:<your_token>@gitlab.toolchain.corning.com/kairos/
 conda create -n <your-environment-name> python=3.7.5
 conda activate <your-environment-name>
 ```
-- If using IDE (such as PyCharm), use the IDE's UI to import the project you created, and configure a Python 3.7 interpreter for it using Conda environment type
+- If using IDE (such as PyCharm), use the IDE's UI to import the project you created, and configure a Python 3.7 interpreter for it using Conda environment type. 
+Then open one of the .py files inside the project, and allow PyCharm to install all dependencies from the requirements.txt If some libraries fail to install, then 
+uncheck "Use Conda Package Manager" in the Project Interpreter settings. Alternatively, simply install requirements from the command line within IDE:
+```bash
+pip install -r requirements.txt
+``` 
 - Switch to the project directory and install `dbx`:
 ```bash
 pip install -U tools/dbx-0.7.0-py3-none-any.whl
+```
+- Create your personal Databricks token, and copy it
+- Configure your Databricks CLI using the copied token (if using IDE, make sure to run command line from IDE, so that the project's Conda environment is active)
+```bash
+databricks configure --token
 ```
 - Create your Databricks cluster, and copy its name. Ensure that Databricks Runtime version of your cluster matches the expectations in requirements.txt (7.3 CPU ML)
 - In the generated directory you'll have a sample job with testing and launch configurations around it.
@@ -233,7 +238,7 @@ Sample section to `libraries` configuration:
 ```
 
 ###
-*Q*: What is the purpose of `init_adapter` method in SampleJob?
+*Q*: What is the purpose of `configure` method in SampleJob?
 
 *A*: 
 This method should be primarily used for adapting configuration for `dbx execute` based run. 

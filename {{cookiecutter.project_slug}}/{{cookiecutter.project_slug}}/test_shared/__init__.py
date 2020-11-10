@@ -5,6 +5,7 @@ test_shared module contains test code and test harnesses for functional and acce
 import os
 import sys
 from abc import ABC, abstractmethod
+from urllib.parse import urlparse
 from typing import MutableMapping, Any, Optional, Mapping
 from pyspark.sql import SparkSession, DataFrame
 from mlflow.tracking import MlflowClient
@@ -16,7 +17,6 @@ try:
     assert tf.__version__ == '2.2.0', "Tensorflow 2.2.0 is required!"
     from glob import glob
     from pathlib import Path
-    from urllib.parse import urlparse
     from petastorm.spark import SparkDatasetConverter
     import petastorm.spark.spark_dataset_converter as petastorm_internal
 

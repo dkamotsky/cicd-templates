@@ -5,7 +5,7 @@ from overrides import overrides
 class SampleJob(Job):
 
     @overrides
-    def init_adapter(self):
+    def configure(self):
         if not self.conf:
             self.logger.info("Init configuration was not provided, using configuration from default_init method")
             self.conf = {
