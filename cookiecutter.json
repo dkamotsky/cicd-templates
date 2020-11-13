@@ -4,12 +4,37 @@
   "description": "Sample Corning CICD Project",
   "author": "",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
-  "corning_division": "ADMIN",
+  "corning_division": ["CDT", "OC", "MTE", "CLS", "FINA", "CET", "SCM"],
   "workspace_dir": "/Shared-{{cookiecutter.corning_division}}/automation/dbx/{{cookiecutter.project_slug}}",
   "artifact_location": "dbfs:/Shared-{{cookiecutter.corning_division}}/automation/dbx/projects/{{cookiecutter.project_slug}}",
-  "_cluster_policies": {
+  "__cluster_policies": {
+    "CDT": {
+      "policy_id": "A15F11B8E7000055",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-CDT-S3AccessRoleProfile"
+    },
+    "OC": {
+      "policy_id": "A15F11B8E700004E",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-OC-S3AccessRoleProfile"
+    },
+    "MTE": {
+      "policy_id": "A15F11B8E700003C",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-MTE-S3AccessRoleProfile"
+    },
+    "CLS": {
+      "policy_id": "A15E27AEE2000013",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-CLS-S3AccessRoleProfile"
+    },
+    "FINA": {
+      "policy_id": "A15E27AEE2000009",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-FINANALYTICS-S3AccessRoleProfile"
+    },
+    "CET": {
+      "policy_id": "A15E27AEE2000003",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-CET-S3AccessRoleProfile"
+    },
     "SCM": {
-      "policy_id": "A15E27AEE2000014"
+      "policy_id": "A15E27AEE2000014",
+      "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-SCM-S3AccessRoleProfile"
     }
   }
 }
