@@ -32,7 +32,7 @@
           "custom_tags": {
             "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
-          "policy_id": "A15E27AEE2000014"
+          "policy_id": {{cookiecutter._cluster_policies[cookiecutter.corning_division]["policy_id"]}}
         },
         "email_notifications": {
           "on_start": [],

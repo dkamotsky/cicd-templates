@@ -6,5 +6,10 @@
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "corning_division": "ADMIN",
   "workspace_dir": "/Shared-{{cookiecutter.corning_division}}/automation/dbx/{{cookiecutter.project_slug}}",
-  "artifact_location": "dbfs:/Shared-{{cookiecutter.corning_division}}/automation/dbx/projects/{{cookiecutter.project_slug}}"
+  "artifact_location": "dbfs:/Shared-{{cookiecutter.corning_division}}/automation/dbx/projects/{{cookiecutter.project_slug}}",
+  "_cluster_policies": {
+    "SCM": {
+      "policy_id": "A15E27AEE2000014"
+    }
+  }
 }
