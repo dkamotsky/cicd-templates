@@ -40,8 +40,8 @@ jobs:
 
       - name: Deploy functional test job
         run: |
-          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
+          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_test_functional_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
 
       - name: Run functional test job
         run: |
-          dbx launch --job={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test --trace --existing-runs=wait
+          dbx launch --job={{cookiecutter.corning_division.lower()}}_test_functional_{{cookiecutter.project_slug}}_sample --trace --existing-runs=wait

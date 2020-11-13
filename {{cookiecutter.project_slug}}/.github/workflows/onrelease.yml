@@ -38,12 +38,12 @@ jobs:
 
       - name: Deploy acceptance tests
         run: |
-          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_acc_test --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
+          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_test_acceptance_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
 
       - name: Run acceptance tests
         run: |
-          dbx launch --job={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_acc_test --trace --existing-runs=wait
+          dbx launch --job={{cookiecutter.corning_division.lower()}}_test_acceptance_{{cookiecutter.project_slug}}_sample --trace --existing-runs=wait
 
       - name: Deploy the production job
         run: |
-          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_production --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
+          dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_production_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
