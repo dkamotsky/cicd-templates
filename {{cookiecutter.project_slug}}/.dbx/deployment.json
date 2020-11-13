@@ -2,7 +2,7 @@
   "default": {
     "jobs": [
       {
-        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_production",
+        "name": "{{cookiecutter.corning_division.lower()}}_production_{{cookiecutter.project_slug}}_sample",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -49,12 +49,12 @@
           "python_file": "{{cookiecutter.project_slug}}/jobs/sample/entrypoint.py",
           "parameters": [
             "--conf-file",
-            "inventory_discovery/config/production.yaml"
+            "{{cookiecutter.project_slug}}/config/production.yaml"
           ]
         }
       },
       {
-        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_acc_test",
+        "name": "{{cookiecutter.corning_division.lower()}}_test_acceptance_{{cookiecutter.project_slug}}_sample",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -96,7 +96,7 @@
         }
       },
       {
-        "name": "{{cookiecutter.corning_division.lower()}}_{{cookiecutter.project_slug}}_sample_func_test",
+        "name": "{{cookiecutter.corning_division.lower()}}_test_functional_{{cookiecutter.project_slug}}_sample",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
