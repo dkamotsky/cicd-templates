@@ -15,6 +15,9 @@ class SampleJobIntegrationTest(unittest.TestCase):
         self.job.conf["output_path"] = self.job.conf["output_path"] % (uuid4(),)
 
     def test_sample(self):
+        # It is the best practice to run real job in Integration tests. This is why we keep this test code common.
+        # But keep in mind that Functional tests should process a lot less data than Acceptance tests.
+        # See https://explainagile.com/agile/xp-extreme-programming/practices/10-minute-build/
         self.job.launch()
         output_count: int = self.spark.\
             read.\

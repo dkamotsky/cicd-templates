@@ -39,9 +39,11 @@ jobs:
           echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
 
       - name: Deploy functional test job
+        # Job name must be defined in .dbx/deployment.json
         run: |
           dbx deploy --jobs=cicd_{{cookiecutter.corning_division.lower()}}_func_test_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
 
       - name: Run functional test job
+        # Job name must be defined in .dbx/deployment.json
         run: |
           dbx launch --job=cicd_{{cookiecutter.corning_division.lower()}}_func_test_{{cookiecutter.project_slug}}_sample --trace --existing-runs=wait

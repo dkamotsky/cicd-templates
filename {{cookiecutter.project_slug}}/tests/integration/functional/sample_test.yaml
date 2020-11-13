@@ -2,5 +2,8 @@ includes:
   - ../common.yaml
 
 output_path: "dbfs:/dbx/tmp/{{cookiecutter.project_slug}}/functional_test/%s/sample_output"
+
+# Use small value, so that functional tests run fast
+# See https://explainagile.com/agile/xp-extreme-programming/practices/10-minute-build/
 output_size: 100
 

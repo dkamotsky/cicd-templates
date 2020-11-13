@@ -37,13 +37,16 @@ jobs:
           echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
 
       - name: Deploy acceptance tests
+        # Job name must be defined in .dbx/deployment.json
         run: |
           dbx deploy --jobs=cicd_{{cookiecutter.corning_division.lower()}}_acc_test_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
 
       - name: Run acceptance tests
+        # Job name must be defined in .dbx/deployment.json
         run: |
           dbx launch --job=cicd_{{cookiecutter.corning_division.lower()}}_acc_test_{{cookiecutter.project_slug}}_sample --trace --existing-runs=wait
 
       - name: Deploy the production job
+        # Job name must be defined in .dbx/deployment.json
         run: |
           dbx deploy --jobs={{cookiecutter.corning_division.lower()}}_production_{{cookiecutter.project_slug}}_sample --deployment-file=.dbx/deployment.json --requirements-file=.dbx/requirements.txt
