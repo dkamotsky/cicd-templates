@@ -54,7 +54,7 @@
         }
       },
       {
-        "name": "{{cookiecutter.corning_division.lower()}}_test_acceptance_{{cookiecutter.project_slug}}_sample",
+        "name": "cicd_{{cookiecutter.corning_division.lower()}}_acc_test_{{cookiecutter.project_slug}}_sample",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
@@ -96,7 +96,7 @@
         }
       },
       {
-        "name": "{{cookiecutter.corning_division.lower()}}_test_functional_{{cookiecutter.project_slug}}_sample",
+        "name": "cicd_{{cookiecutter.corning_division.lower()}}_func_test_{{cookiecutter.project_slug}}_sample",
         "new_cluster": {
           "spark_version": "7.3.x-cpu-ml-scala2.12",
           "node_type_id": "i3.xlarge",
