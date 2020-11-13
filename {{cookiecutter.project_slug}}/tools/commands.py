@@ -4,7 +4,7 @@ from dbx.commands.deploy import _adjust_job_definitions
 
 
 @click.command(context_settings=CONTEXT_SETTINGS,
-               short_help="Executes given code on the existing cluster.")
+               short_help="Runs given code on the existing cluster. Different from 'execute' in how configuration is handled. Corning implementation.")
 @click.option("--cluster-id", required=False, type=str, help="Cluster ID.")
 @click.option("--cluster-name", required=False, type=str, help="Cluster name.")
 @click.option("--job", required=True, type=str, help="Test job name to be executed")
@@ -95,8 +95,8 @@ def run(environment: str,
 
         mlflow.set_tags(tags)
 
-        dbx_echo("Starting entrypoint file execution")
         execute_command(v1_client, cluster_id, context_id, f'import mlflow')
         execute_command(v1_client, cluster_id, context_id, f'import sys\nsys.argv = {argv}')
+        dbx_echo("Starting entrypoint file execution")
         execute_command(v1_client, cluster_id, context_id, pathlib.Path(entrypoint_file).read_text())
         dbx_echo("Command execution finished")

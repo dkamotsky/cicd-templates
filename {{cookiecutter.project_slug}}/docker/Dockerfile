@@ -9,15 +9,15 @@ MAINTAINER Denis Kamotsky "kamotskyd@corning.com"
 ENV PIP_DEFAULT_TIMEOUT 300
 
 RUN apt-get update -y
-RUN apt-get install -y vim less
+RUN apt-get install -y vim less jq
 
 RUN pip install --upgrade pip
 
-# /{{cookiecutter.project_slug}} is not mounted yet!
+# /inventory_discovery is not mounted yet!
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
 
-# /{{cookiecutter.project_slug}} is not mounted yet!
+# /inventory_discovery is not mounted yet!
 COPY ./tools /tools
 RUN pip install --no-cache-dir /tools/dbx-0.7.0-py3-none-any.whl
 
@@ -36,23 +36,3 @@ FROM base AS connect
 
 RUN pip uninstall -y pyspark
 RUN pip install databricks-connect==7.3.3b0
-
-ARG CLUSTER
-RUN : "${CLUSTER:?CLUSTER build argument needs to be set and non-empty.}"
-ARG TOKEN
-RUN : "${TOKEN:?TOKEN build argument needs to be set and non-empty.}"
-ENV DB_CLUSTER=${CLUSTER}
-
-RUN echo \
-"[DEFAULT]\n\
-host = https://corning.cloud.databricks.com\n\
-token = ${TOKEN}" > /root/.databrickscfg
-
-RUN echo \
-"{\n\
-  \"host\": \"https://corning.cloud.databricks.com\",\n\
-  \"token\": \"${TOKEN}\",\n\
-  \"cluster_id\": \"${CLUSTER}\",\n\
-  \"org_id\": \"0\",\n\
-  \"port\": \"15001\"\n\
-}" > /root/.databricks-connect

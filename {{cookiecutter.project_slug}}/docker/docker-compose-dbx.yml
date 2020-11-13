@@ -5,12 +5,12 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-      target: connect
+      target: base
     entrypoint:
       - /{{cookiecutter.project_slug}}/docker/scripts/launch_dbx.sh
     command:
       - $ARGS
     volumes:
      - ..:/{{cookiecutter.project_slug}}
-
+     - ~:/home/host
 

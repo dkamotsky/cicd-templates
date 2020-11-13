@@ -1,0 +1,6 @@
+includes:
+  - ../common.yaml
+
+output_path: "dbfs:/dbx/tmp/{{cookiecutter.project_slug}}/functional_test/%s/sample_output"
+output_size: 100
+

@@ -1,7 +1,3 @@
-"""
-data module contains various data providers
-"""
-
 try:
 
     import tensorflow as tf

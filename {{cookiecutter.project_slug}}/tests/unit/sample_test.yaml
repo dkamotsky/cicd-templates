@@ -1,0 +1,4 @@
+includes:
+  - ../integration/common.yaml
+
+output_size: 10

@@ -22,7 +22,7 @@
             "first_on_demand": 1,
             "availability": "SPOT_WITH_FALLBACK",
             "zone_id": "us-east-1a",
-            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DatabricksS3AccessProfile",
+            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-SCM-S3AccessRoleProfile",
             "spot_bid_price_percent": 100,
             "ebs_volume_type": "GENERAL_PURPOSE_SSD",
             "ebs_volume_count": 3,
@@ -32,7 +32,7 @@
           "custom_tags": {
             "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
-          "policy_id": "A15E27AEE2000012"
+          "policy_id": "A15E27AEE2000014"
         },
         "email_notifications": {
           "on_start": [],
@@ -49,7 +49,7 @@
           "python_file": "{{cookiecutter.project_slug}}/jobs/sample/entrypoint.py",
           "parameters": [
             "--conf-file",
-            "conf/test/sample.json"
+            "inventory_discovery/config/production.yaml"
           ]
         }
       },
@@ -74,7 +74,7 @@
             "first_on_demand": 1,
             "availability": "SPOT_WITH_FALLBACK",
             "zone_id": "us-east-1a",
-            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DatabricksS3AccessProfile",
+            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-SCM-S3AccessRoleProfile",
             "spot_bid_price_percent": 100,
             "ebs_volume_type": "GENERAL_PURPOSE_SSD",
             "ebs_volume_count": 3,
@@ -84,10 +84,15 @@
           "custom_tags": {
             "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
-          "policy_id": "A15E27AEE2000012"
+          "policy_id": "A15E27AEE2000014"
         },
+        "include": [ "{{cookiecutter.project_slug}}/config", "tests/integration" ],
         "spark_python_task": {
-          "python_file": "tests/acceptance/sample_test.py"
+          "python_file": "tests/integration/acceptance/sample_test.py",
+          "parameters": [
+            "--conf-file",
+            "tests/integration/acceptance/sample_test.yaml"
+          ]
         }
       },
       {
@@ -111,7 +116,7 @@
             "first_on_demand": 1,
             "availability": "SPOT_WITH_FALLBACK",
             "zone_id": "us-east-1a",
-            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DatabricksS3AccessProfile",
+            "instance_profile_arn": "arn:aws:iam::331130354363:instance-profile/DBK-SCM-S3AccessRoleProfile",
             "spot_bid_price_percent": 100,
             "ebs_volume_type": "GENERAL_PURPOSE_SSD",
             "ebs_volume_count": 3,
@@ -121,10 +126,15 @@
           "custom_tags": {
             "Application": "user-DBKcluster-{{cookiecutter.corning_division}}"
           },
-          "policy_id": "A15E27AEE2000012"
+          "policy_id": "A15E27AEE2000014"
         },
+        "include": [ "{{cookiecutter.project_slug}}/config", "tests/integration" ],
         "spark_python_task": {
-          "python_file": "tests/functional/sample_test.py"
+          "python_file": "tests/integration/functional/sample_test.py",
+          "parameters": [
+            "--conf-file",
+            "tests/integration/functional/sample_test.yaml"
+          ]
         }
       }
     ]

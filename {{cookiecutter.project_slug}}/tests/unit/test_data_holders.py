@@ -8,7 +8,7 @@ try:
     # pylint: disable=import-error
     import tensorflow as tf
     # pylint: disable=no-name-in-module
-    from {{cookiecutter.project_slug}}.data import WrappedTensorflowDataHolder #type: ignore
+    from {{cookiecutter.project_slug}}.examples.data_providers import WrappedTensorflowDataHolder #type: ignore
 except:
     pytest.skip("Skipping unit tests which require Tensorflow, because Tensorflow is not installed.",
                 allow_module_level=True)

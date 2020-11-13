@@ -1,0 +1,4 @@
+includes:
+  - ../../{{cookiecutter.project_slug}}/config/production.yaml
+
+

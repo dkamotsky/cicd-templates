@@ -1,0 +1,4 @@
+includes:
+  - ../common.yaml
+
+output_path: "dbfs:/dbx/tmp/{{cookiecutter.project_slug}}/acceptance_test/%s/sample_output"

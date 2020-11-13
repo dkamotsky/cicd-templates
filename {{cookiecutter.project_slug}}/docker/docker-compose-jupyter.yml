@@ -16,4 +16,4 @@ services:
       - echo 'Starting Jupyter with locally mounted filesystem...' && /{{cookiecutter.project_slug}}/docker/scripts/launch_jupyter.sh
     volumes:
      - ..:/{{cookiecutter.project_slug}}
-
+     - ~:/home/host

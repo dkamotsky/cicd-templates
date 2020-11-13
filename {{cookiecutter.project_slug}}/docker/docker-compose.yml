@@ -5,7 +5,9 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-      target: connect
+      target: base
     volumes:
      - ..:/{{cookiecutter.project_slug}}
+     - ~:/home/host
+
 

@@ -2,8 +2,8 @@
   "environments": {
     "default": {
       "profile": "DEFAULT",
-      "workspace_dir": "{{cookiecutter.workspace_dir}}",
-      "artifact_location": "{{cookiecutter.artifact_location}}"
+      "workspace_dir": "/Shared-SCM/automation/dbx/inventory_discovery",
+      "artifact_location": "dbfs:/Shared-SCM/automation/dbx/projects/inventory_discovery"
     }
   }
 }
