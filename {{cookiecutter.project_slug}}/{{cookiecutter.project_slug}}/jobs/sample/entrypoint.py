@@ -1,4 +1,5 @@
 from {{cookiecutter.project_slug}}.jobs import Job
+from {{cookiecutter.project_slug}}.steps.generation import GenerationStep
 from overrides import overrides
 
 
@@ -7,12 +8,12 @@ class SampleJob(Job):
     @overrides
     def configure(self):
         assert self.conf, "SampleJob does not have configuration. Did you provide a --conf-file?"
+        self.generation_step: GenerationStep = GenerationStep(self.spark, **self.conf)
 
     @overrides
     def launch(self):
         self.logger.info("Launching sample job")
-        df = self.spark.range(0, self.conf["output_size"])
-        df.write.format(self.conf["output_format"]).mode("overwrite").save(self.conf["output_path"])
+        self.generation_step()
         self.logger.info("Sample job finished!")
 
 
