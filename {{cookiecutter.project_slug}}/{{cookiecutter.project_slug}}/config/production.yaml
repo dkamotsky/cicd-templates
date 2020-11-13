@@ -1,4 +1,4 @@
-output_format: "delta",
+output_format: "delta"
 output_path: "dbfs:/dbx/tmp/{{cookiecutter.project_slug}}/sample_output"
 output_size: 1000
 
