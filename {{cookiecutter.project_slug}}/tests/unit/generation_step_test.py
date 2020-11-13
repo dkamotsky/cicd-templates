@@ -28,8 +28,8 @@ class GenerationStepUnitTest(unittest.TestCase):
         step: GenerationStep = GenerationStep(**self.env.conf)
         step.output_path = self.temp_dir
         step(self.env.spark)
-        output_count: int = self.env.spark.read.format(self.step.output_format).load(self.step.output_path).count()
-        self.assertEqual(output_count, self.step.output_size)
+        output_count: int = self.env.spark.read.format(step.output_format).load(step.output_path).count()
+        self.assertEqual(output_count, step.output_size)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
