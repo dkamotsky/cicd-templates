@@ -1,6 +1,6 @@
 from typing import Optional
 from overrides import overrides
-from inventory_discovery.jobs import Job
+from {{cookiecutter.project_slug}}.jobs import Job
 
 
 class UnitTestEnvironment(Job):

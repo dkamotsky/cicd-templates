@@ -1,5 +1,5 @@
 import unittest
-from inventory_discovery.jobs import locate_code
+from {{cookiecutter.project_slug}}.jobs import locate_code
 
 
 if __name__ == "__main__":
