@@ -7,6 +7,6 @@ if __name__ == "__main__":
     from integration.common import SampleJobIntegrationTest
     # Cannot use unittest.main() because it system exits in the end
     suite = unittest.TestSuite()
-    suite.addTest(SampleJobIntegrationTest('test_job'))
+    suite.addTest(SampleJobIntegrationTest('test_sample'))
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
