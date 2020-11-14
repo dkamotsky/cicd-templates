@@ -1,4 +1,2 @@
-# Requirements added here will be automatically
-# installed with all jobs deployed into Databricks
 overrides==3.1.0
 pyyaml==5.3.1
